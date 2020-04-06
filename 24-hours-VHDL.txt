@@ -1,0 +1,40 @@
+library ieee;
+USE ieee.std_logic_1164.all;
+USE ieee.std_logic_unsigned.all;
+ENTITY hour24 IS
+    PORT
+    (  ci        :IN     std_logic;
+       hclear    :IN     std_logic;
+       clk       :IN     std_logic;
+       co        :out    std_logic;
+       qh        :buffer std_logic_vector(3 downto 0);
+       ql        :buffer std_logic_vector(3 downto 0)
+);
+END hour24;
+
+ARCHITECTURE behave OF hour24 IS
+BEGIN
+ co<='1'when (qh="0010" and ql="0011" and ci='1') else '0';
+
+   PROCESS (clk,hclear)
+     BEGIN
+   IF(hclear='1')THEN
+        qh<="0000";
+          ql<="0000";
+        ELSIF(clk'EVENT AND clk='1')THEN
+            if(ci='1')then
+            if(ql=9) or(ql=3 and qh=2) then 
+            ql<="0000";
+            if(qh=2)  then
+            qh<="0000";
+        else
+qh<=qh+1;
+ 
+end if;
+ else
+        ql<=ql+1;
+      end if;
+     END IF;
+   END IF;
+ END PROCESS;
+END behave;
